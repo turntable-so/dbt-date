@@ -28,6 +28,13 @@ cast(
 )
 {%- endmacro -%}
 
+{% macro duckdb__convert_timezone(column, target_tz, source_tz) -%}
+cast(
+    cast({{ column }} as {{ dbt.type_timestamp() }})
+        at time zone '{{ source_tz }}' at time zone '{{ target_tz }}' as {{ dbt.type_timestamp() }}
+)
+{%- endmacro -%}
+
 {%- macro redshift__convert_timezone(column, target_tz, source_tz) -%}
 {{ return(dbt_date.default__convert_timezone(column, target_tz, source_tz)) }}
 {%- endmacro -%}
